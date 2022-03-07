@@ -117,4 +117,12 @@ public class TestDivides {
 		assertEquals(postfix, op.toString());
 	}
 
+	@Test
+	public void testDivideByZero() {
+		try {
+			double resultDiv = op.op(value1, 0);
+		} catch (IllegalArithmeticOperation e) {
+		}
+	}
+
 }

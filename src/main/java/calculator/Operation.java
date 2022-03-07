@@ -36,7 +36,7 @@ public abstract class Operation implements Expression
 	  if (n!=null) notation = n;
   }
   
-  abstract public int op(int l, int r);
+  abstract public int op(int l, int r) throws IllegalArithmeticOperation;
     // the operation itself is specified in the subclasses
 
   // add more arguments to the existing list of arguments args
@@ -44,7 +44,7 @@ public abstract class Operation implements Expression
   	args.addAll(params);
   }
 
-  public void accept(Visitor v) {
+  public void accept(Visitor v) throws IllegalArithmeticOperation {
   	// ask each of the argument expressions of the current operation to accept the visitor
   	for(Expression a:args) { a.accept(v); }
   	// and then visit the current operation itself
