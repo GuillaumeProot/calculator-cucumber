@@ -1,4 +1,4 @@
 package calculator;
 
-public class IllegalArithmeticOperation extends Exception{
+public class IllegalArithmeticOperation extends IllegalConstruction{
 }

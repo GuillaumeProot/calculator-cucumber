@@ -1,7 +1,6 @@
 package visitor;
 
 import calculator.Expression;
-import calculator.IllegalArithmeticOperation;
 import calculator.MyNumber;
 import calculator.Operation;
 
@@ -17,7 +16,7 @@ public class Evaluator extends Visitor {
         computedValue = n.getValue();
     }
 
-    public void visit(Operation o) throws IllegalArithmeticOperation {
+    public void visit(Operation o){
         ArrayList<Integer> evaluatedArgs = new ArrayList<>();
         //first loop to recursively evaluate each subexpression
         for(Expression a:o.args) {

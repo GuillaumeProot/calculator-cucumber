@@ -1,6 +1,7 @@
 package calculator;
 
 import visitor.Visitor;
+import visitor.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,11 @@ public abstract class Operation implements Expression
   public /*constructor*/ Operation(List<Expression> elist)
 		  throws IllegalConstruction
 	{
-		this(elist, null);
+		if (elist == null) {
+			throw new IllegalConstruction();
+		} else {
+			args = new ArrayList<>(elist);
+		}
     }
 
   public List<Expression> getArgs() {
@@ -28,15 +33,11 @@ public abstract class Operation implements Expression
   public /*constructor*/ Operation(List<Expression> elist,Notation n)
 		  throws IllegalConstruction
   {
-	  if (elist == null) {
-		  throw new IllegalConstruction(); }
-	  else {
-		  args = new ArrayList<>(elist);
-	  }
-	  if (n!=null) notation = n;
+	  this(elist);
+	  notation = n;
   }
   
-  abstract public int op(int l, int r) throws IllegalArithmeticOperation;
+  abstract public int op(int l, int r);
     // the operation itself is specified in the subclasses
 
   // add more arguments to the existing list of arguments args
@@ -44,7 +45,7 @@ public abstract class Operation implements Expression
   	args.addAll(params);
   }
 
-  public void accept(Visitor v) throws IllegalArithmeticOperation {
+  public void accept(Visitor v){
   	// ask each of the argument expressions of the current operation to accept the visitor
   	for(Expression a:args) { a.accept(v); }
   	// and then visit the current operation itself
@@ -81,21 +82,9 @@ public abstract class Operation implements Expression
   }
 
   final public String toString(Notation n) {
-   Stream<String> s = args.stream().map(Object::toString);
-   switch (n) {
-	   case INFIX: return "( " +
-			              s.reduce((s1,s2) -> s1 + " " + symbol + " " + s2).get() +
-			              " )";
-	   case PREFIX: return symbol + " " +
-			               "(" +
-			               s.reduce((s1,s2) -> s1 + ", " + s2).get() +
-			               ")";
-	   case POSTFIX: return "(" +
-			                s.reduce((s1,s2) -> s1 + ", " + s2).get() +
-			                ")" +
-			                " " + symbol;
-	   default: return "This case should never occur.";
-	  }
+	  Printer p = new Printer(n);
+	  return p.getEval(this);
+
   }
 
 	//Two Operation expressions are equal if their list of arguments is equal and they are the same operation
@@ -120,6 +109,9 @@ public abstract class Operation implements Expression
 		result = prime * result + symbol.hashCode();
 		result = prime * result + args.hashCode();
 		return result;
+	}
+	public String getSymbol() {
+		return symbol;
 	}
 
 }
